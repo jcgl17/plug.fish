@@ -11,6 +11,7 @@ Minimalistic Git-based fish plugin manager.
 - Flexible plugin management
 - Support [Fisher plugins](https://github.com/jorgebucaran/fisher#creating-a-plugin)
 - < 100 lines of code you can actually read and understand
+- Support installing a specific commit/tag
 
 ## Requirements
 
@@ -21,16 +22,16 @@ Minimalistic Git-based fish plugin manager.
 
 1. Add the following to your `~/.config/fish/config.fish`
 
-    ```fish
-    set plugins https://github.com/kidonng/plug.fish
-    source (path filter $__fish_user_data_dir/plugins/plug.fish/conf.d/plugin_load.fish || curl https://raw.githubusercontent.com/kidonng/plug.fish/v3/conf.d/plugin_load.fish | psub)
-    ```
+   ```fish
+   set plugins github.com:ziyong-was-taken/plug.fish
+   source (path filter $__fish_user_data_dir/plugins/plug.fish/conf.d/plugin_load.fish || curl https://raw.githubusercontent.com/ziyong-was-taken/plug.fish/v3/conf.d/plugin_load.fish | psub)
+   ```
 
 2. Restart fish
 
-    ```fish
-    exec fish
-    ```
+   ```fish
+   exec fish
+   ```
 
 ## Usage
 
@@ -39,9 +40,9 @@ Adding plugins is as easy as setting `$plugins`:
 ```fish
 # Missing plugins are downloaded the next shell session
 set plugins \
-    https://github.com/kidonng/plug.fish \
-    https://github.com/other/plugin \
-    ~/any/git/repository
+    github.com:ziyong-was-taken/plug.fish \
+    github.com:other/plugin \
+    codeberg.org:git/repository@1.3.4
 ```
 
 Update plugins by running `plugin_update`:
@@ -56,8 +57,8 @@ Don't want some plugin to update? Add it to `$plugins_pinned`:
 
 ```fish
 set plugins \
-    https://github.com/kidonng/plug.fish \
-    https://github.com/plugin/to-be-pinned
+    github.com:ziyong-was-taken/plug.fish \
+    github.com:plugin/to-be-pinned
 # Use the last segment as identifier 
 set plugins_pinned to-be-pinned
 ```
@@ -77,11 +78,11 @@ Don't like editing config files? Make `$plugins` a [universal variable](https://
 
 ```shellsession
 $ set --universal plugins \
-    https://github.com/kidonng/plug.fish \
-    https://github.com/plugin/foo
+    github.com:ziyong-was-taken/plug.fish \
+    github.com:plugin/foo
 
 $ # Add plugin bar
-$ set --append plugins https://github.com/plugin/bar && exec fish
+$ set --append plugins github.com:plugin/bar && exec fish
 
 $ # Remove plugin foo
 $ set --erase plugins[2] && plugin_uninstall
@@ -94,9 +95,9 @@ Edit `~/.config/fish/config.fish`:
 ```diff
 - set plugins \
 + set --query plugins || set plugins \
-    https://github.com/kidonng/plug.fish \
-    https://github.com/plugin/foo \
-    https://github.com/plugin/bar
+    github.com:ziyong-was-taken/plug.fish \
+    github.com:plugin/foo \
+    github.com:plugin/bar
 ```
 
 Now you are able to load plugins however you want:

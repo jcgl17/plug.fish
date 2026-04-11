@@ -1,5 +1,6 @@
 function plugin_uninstall
-    set --local enabled_plugins (path basename $plugins)
+    # simpler to include revisions in enabled plugins
+    set --local enabled_plugins (path basename $plugins | string split @)
 
     for plugin_dir in $_plugins_dir/*
         set --local plugin_name (path basename $plugin_dir)
@@ -11,6 +12,7 @@ function plugin_uninstall
         for conf in $plugin_dir/conf.d/*.fish
             emit (path basename $conf | path change-extension '')_uninstall
         end
+
         # `--force` needed for `.git` directory
         rm --recursive --force $plugin_dir
 

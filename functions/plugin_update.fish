@@ -1,6 +1,7 @@
 function plugin_update
     for plugin in $plugins
-        set --local plugin_name (path basename $plugin)
+        # remove revision
+        set --local plugin_name (path basename $plugin | string split @)[1]
         set --local plugin_dir $_plugins_dir/$plugin_name
 
         if contains $plugin_name $plugins_pinned

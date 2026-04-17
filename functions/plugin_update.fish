@@ -16,6 +16,8 @@ function plugin_update
             # get latest tag and update plugin name
             set --function latest_tag (git -C $plugin_dir tag --sort -creatordate | head -n1)
             set plugins[$i] $repo[1]@$latest_tag
+
+            echo Updating to version (set_color --bold)$latest_tag(set_color normal)
         else
             # no revision, simply pull from HEAD
             set --function latest_tag HEAD

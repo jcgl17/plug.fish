@@ -1,3 +1,8 @@
+# helper function
+function _bold_echo
+    echo (set_color --bold)$argv(set_color normal)
+end
+
 set --query _plugins_dir && exit
 
 set --global _plugins_dir $__fish_user_data_dir/plugins
@@ -23,7 +28,7 @@ for plugin in $plugins
     test -e $plugin_dir || set --local install
 
     if set --query install
-        echo Installing (set_color --bold)$plugin_name(set_color normal)
+        echo Installing (_bold_echo $plugin_name)
 
         # --filter blob:none -> only download files when needed
         # --revision $repo[2] --depth 1 -> only clone revision (no history)

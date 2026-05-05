@@ -6,9 +6,9 @@ function plugin_update
         set --local plugin_dir $_plugins_dir/$plugin_name
 
         if contains $plugin_name $plugins_pinned
-            echo Skipping (set_color --bold)$plugin_name(set_color normal)
+            echo Skipping (_bold_echo $plugin_name)
         else
-            echo Updating (set_color --bold)$plugin_name(set_color normal)
+            echo Updating (_bold_echo $plugin_name)
 
             # shared git fetch arguments
             set --local fetch_args -C $plugin_dir fetch --quiet --filter blob:none --depth 1
@@ -19,7 +19,7 @@ function plugin_update
                 set --function latest_tag (git -C $plugin_dir describe)
                 set plugins[$i] $repo[1]@$latest_tag
 
-                echo Updating to version (set_color --bold)$latest_tag(set_color normal)
+                echo Updating to version (_bold_echo $latest_tag)
             else
                 # no revision, simply fetch from HEAD
                 git $fetch_args origin HEAD

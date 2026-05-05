@@ -10,25 +10,23 @@ function plugin_update
         else
             echo Updating (set_color --bold)$plugin_name(set_color normal)
 
+            # shared git fetch arguments
+            set --local fetch_args -C $plugin_dir fetch --quiet --filter blob:none --depth 1
+
             if set --query repo[2]
                 # get latest tag and update plugin name
-                set --function latest_tag (git -C $plugin_dir tag --sort -creatordate | head --lines 1)
+                git $fetch_args --tags
+                set --function latest_tag (git -C $plugin_dir describe)
                 set plugins[$i] $repo[1]@$latest_tag
 
                 echo Updating to version (set_color --bold)$latest_tag(set_color normal)
             else
-                # no revision, simply pull from HEAD
-                set --function latest_tag HEAD
+                # no revision, simply fetch from HEAD
+                git $fetch_args origin HEAD
+                set --function latest_tag FETCH_HEAD
             end
 
-            # --filter blob:none -> only download files when needed
-            # --depth 1 -> no history
-            # uses SSH
-            git -C $plugin_dir fetch \
-                --quiet --filter blob:none \
-                --depth 1 \
-                origin $latest_tag
-            git -C $plugin_dir checkout --quiet FETCH_HEAD
+            git -C $plugin_dir checkout --quiet $latest_tag
 
             for conf in $plugin_dir/conf.d/*.fish
                 # Support masking

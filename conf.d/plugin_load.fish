@@ -19,7 +19,7 @@ for plugin in $plugins
         $fish_complete_path[1] \
         $plugin_dir/completions \
         $fish_complete_path[2..]
-    # Functions should be available before emitting events
+    # functions should be available before emitting events
     set fish_function_path \
         $fish_function_path[1] \
         $plugin_dir/functions \
@@ -40,7 +40,7 @@ for plugin in $plugins
     end
 
     for conf in $plugin_dir/conf.d/*.fish
-        # Support masking
+        # support masking
         contains (path basename $conf) $user_conf || source $conf
         set --query install && emit (path basename $conf | path change-extension '')_install
     end

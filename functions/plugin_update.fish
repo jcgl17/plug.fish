@@ -29,7 +29,7 @@ function plugin_update
             git -C $plugin_dir checkout --quiet $latest_tag
 
             for conf in $plugin_dir/conf.d/*.fish
-                # Support masking
+                # support masking
                 contains (path basename $conf) $user_conf || source $conf
                 emit (path basename $conf | path change-extension '')_update
             end

@@ -1,4 +1,5 @@
 function plugin_update
+    set --local status_code 0
     # iterate by index to allow dynamic allocation
     for i in (seq (count $plugins))
         set --local repo (string split -- @ $plugins[$i])
@@ -26,6 +27,7 @@ function plugin_update
 
             # perform the fetch, recording the commits for local HEAD and the remote HEAD
             git $fetch_args origin $plugin_commitish
+            or { set status_code 1; continue }
 
             # current_commit is the hash of the local HEAD
             set --local current_commit (git -C $plugin_dir rev-parse --short HEAD)
@@ -37,6 +39,7 @@ function plugin_update
             if test $current_commit != $new_commit
                 echo Updating from $current_commit to $new_commit
                 git -C $plugin_dir checkout --quiet $new_commit
+                or { set status_code 1; continue }
             else
                 echo Already up to date
             end
@@ -48,4 +51,5 @@ function plugin_update
             end
         end
     end
+    return $status_code
 end

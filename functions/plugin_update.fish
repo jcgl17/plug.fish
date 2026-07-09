@@ -16,7 +16,8 @@ function plugin_update
             if set --query repo[2]
                 # get latest tag and update plugin name
                 git $fetch_args --tags
-                set --function latest_tag (git -C $plugin_dir describe)
+                set --function latest_tag (git -C $plugin_dir tag --sort -creatordate \
+                                           | head --lines 1)
                 set plugins[$i] $repo[1]@$latest_tag
 
                 echo Updating to version (_bold_echo $latest_tag)

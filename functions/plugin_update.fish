@@ -27,6 +27,17 @@ function plugin_update
         # shared git fetch arguments
         set --local fetch_args -C $plugin_dir fetch --quiet --filter blob:none --depth 1
 
+        if test $plugin_commitish = AUTO
+            # this branch contains an additional fetch. in the end, that's
+            # probably worth it for better/simpler overall control flow
+            git $fetch_args --tags
+            or { set status_code 1; continue }
+            set plugin_commitish (git -C $plugin_dir tag --sort -creatordate \
+                                           | head --lines 1)
+            or { set status_code 1; continue }
+            echo Found update to $plugin_commitish
+        end
+
         # perform the fetch, recording the commits for local HEAD and the remote HEAD
         git $fetch_args origin $plugin_commitish
         or { set status_code 1; continue }
@@ -39,7 +50,7 @@ function plugin_update
         set --local new_commit (git -C $plugin_dir rev-parse --short FETCH_HEAD)
 
         if test $current_commit != $new_commit
-            echo Updating from $current_commit to $new_commit
+            echo Updating from (git -C $plugin_dir describe --always) to $new_commit
             git -C $plugin_dir checkout --quiet $new_commit
             or { set status_code 1; continue }
         else
